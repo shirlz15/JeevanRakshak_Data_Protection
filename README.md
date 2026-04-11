@@ -119,7 +119,7 @@ The system is divided into 4 layers:
 
 The system verifies user voice input and detects the spoken language. It enables **multilingual interaction**, allowing users to communicate naturally with the AI health assistant.
 
-![Voice Checking](./screenshots/voice-check.png)
+![Voice Checking](./screenshots/voice-check.jpg)
 ---
 
 ### ii) 📡 Live Data from Sensors
@@ -129,8 +129,8 @@ Displays real-time sensor data received from Arduino Uno R4, including:
 * Heart rate (Pulse sensor)
 * Body temperature (DHT11)
 
-![ESP32 Data](./screenshots/esp32-data.png)
-Ensures continuous **live health monitoring**.
+![ESP32 Data](./screenshots/esp32-data.jpg)
+Ensures continuous live health monitoring.
 ---
 
 ### iii) 🗣️ Talk to Your AI Health Guardian
@@ -142,7 +142,7 @@ The AI responds intelligently, providing:
 * Alerts
 * Guidance
   
-![AI Interaction](./screenshots/ai-chat.png)
+![AI Interaction](./screenshots/ai-chat.jpg)
 Supports **natural conversation in multiple languages**.
 
 ---
@@ -155,7 +155,7 @@ A real-time dashboard showing:
 * Risk level (Normal / Moderate / Critical)
 * Visual indicators for easy understanding
 
-![Dashboard](./screenshots/dashboard.png)
+![Dashboard](./screenshots/dashboard.jpg)
 Designed for **clear and quick monitoring**.
 
 ---
@@ -165,7 +165,7 @@ Designed for **clear and quick monitoring**.
 Shows the system detecting abnormal conditions and preparing to trigger an alert.
 Acts as an intermediate stage before emergency escalation.
 
-![Before Alert](./screenshots/before-alert.png)
+![Before Alert](./screenshots/before-alert.jpg)
 ---
 
 ### vi) 🚨 After Sending Alert
@@ -176,7 +176,7 @@ When a critical condition is detected:
 * Notifications reach **registered family members**
 * Ensures immediate response in emergencies
   
-![After Alert](./screenshots/after-alert.png)
+![After Alert](./screenshots/after-alert.jpg)
 ---
 
 ### vii) 🗄️ Database Status
@@ -186,8 +186,8 @@ Displays storage of:
 * Health records
 * Previous readings
 * Alert history
-
-![Database](./screenshots/database.png)
+![Database](./screenshots/database.jpg)
+![Database](./screenshots/databasemongo.jpg)
 Ensures proper **data tracking and reliability**.
 
 ---
@@ -200,7 +200,7 @@ Shows the connection between:
 * Microcontroller (Arduino / ESP32)
 * Web interface
 
-![System Status](./screenshots/system-status.png)
+![System Status](./screenshots/system-status.jpg)
 Confirms system is **active and functioning properly**.
 
 ---
@@ -213,7 +213,7 @@ Displays the backend running locally:
 * Port connection (localhost)
 * System initialization logs
 
-![Terminal](./screenshots/terminal.png)
+![Terminal](./screenshots/terminal.jpg)
 Shows the project is **successfully deployed locally**.
 
 ---
@@ -227,7 +227,7 @@ Demonstrates the complete workflow:
 3. Risk classification
 4. Alert generation
 
-![Working](./screenshots/working.png)
+![Working](./screenshots/dash.jpg)
 Represents the **end-to-end system operation**.
 
 ---
@@ -240,7 +240,7 @@ Shows the hardware setup including:
 * DHT11 temperature sensor
 * Arduino Uno R4
 
-![Prototype](./screenshots/prototype.png)
+![Prototype](./screenshots/prototype.jpg)
 Represents the **physical implementation of the system**.
 
 ---
@@ -255,7 +255,7 @@ Represents the **physical implementation of the system**.
 * 🗄️ Health data storage
 * 🔌 IoT-based sensor integration
 * 👵 User-friendly design for elderly
-![Features](./screenshots/features.png)
+![Hardware](./screenshots/Hardware.jpg)
 ---
 
 ## ⚙️ Setup & Installation
