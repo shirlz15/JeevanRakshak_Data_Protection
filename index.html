@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JeevanRakshak – AI Health Guardian</title>
+  <meta name="description"
+    content="JeevanRakshak is an AI-powered voice health assistant with real-time IoT sensor monitoring, multilingual support, and automatic emergency response." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <div class="logo">
+        <span class="logo-icon">⚒</span>
+        <span class="logo-text">JeevanRakshak</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#live-data">Live Data</a></li>
+        <li><a href="#demo">Voice AI</a></li>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#emergency">Emergency</a></li>
+        <li><a href="#db-status">Database</a></li>
+        <li><a href="#workflow">System</a></li>
+      </ul>
+      <a href="#demo" class="nav-cta">Try Demo</a>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero" id="home">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-particles" id="particles"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        AI + IoT Healthcare · ESP32 · Real-Time · 2026
+      </div>
+      <h1 class="hero-title">
+        JeevanRakshak
+        <span class="hero-subtitle-line">AI Health Guardian</span>
+      </h1>
+      <p class="hero-desc">
+        Real-time health monitoring from ESP32 sensors → Backend Server → Dashboard.<br />
+        Voice AI interaction · Multilingual · Automatic emergency alerts.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary glow-pulse" id="heroVoiceBtn" onclick="startVoiceDemo()">
+          <span class="btn-icon">🎙</span> Start Voice Check
+        </button>
+        <a href="#workflow" class="btn-ghost">
+          <span>See How It Works</span> →
+        </a>
+      </div>
+
+      <!-- Device Visual -->
+      <div class="hero-device-wrap">
+        <div class="device-glow"></div>
+        <div class="laptop-vis">
+          <div class="laptop-screen">
+            <div class="mini-dash">
+              <div class="mini-header">
+                <span class="mini-dot red"></span>
+                <span class="mini-dot yellow"></span>
+                <span class="mini-dot green"></span>
+                <span class="mini-title">JeevanRakshak AI</span>
+              </div>
+              <div class="mini-vitals">
+                <div class="mini-card">❤️ <b id="heroHR">92</b> bpm</div>
+                <div class="mini-card">🌡️ <b id="heroTemp">37.0</b>°C</div>
+                <div class="mini-card">🫁 <b id="heroSpo2">96</b>%</div>
+                <div class="mini-card warn">⚠️ <b id="heroRisk">Moderate</b></div>
+              </div>
+              <div class="mini-wave">
+                <canvas id="heroWaveCanvas" width="260" height="40"></canvas>
+              </div>
+              <div class="mini-ai-bubble">🤖 Analyzing vitals from ESP32… Connected ✔</div>
+            </div>
+          </div>
+          <div class="laptop-hinge"></div>
+          <div class="laptop-base">
+            <div class="laptop-trackpad"></div>
+          </div>
+        </div>
+        <!-- Sensor modules -->
+        <div class="sensor-module s1">
+          <div class="sensor-icon">📡</div>
+          <div class="sensor-label">ESP32</div>
+          <div class="sensor-line sl1"></div>
+        </div>
+        <div class="sensor-module s2">
+          <div class="sensor-icon">💓</div>
+          <div class="sensor-label">Pulse</div>
+          <div class="sensor-line sl2"></div>
+        </div>
+        <div class="sensor-module s3">
+          <div class="sensor-icon">🌡</div>
+          <div class="sensor-label">Temp</div>
+          <div class="sensor-line sl3"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll-hint">▼ Scroll to explore</div>
+  </section>
+
+  <!-- ─── 1. LIVE HARDWARE DATA PANEL ─── -->
+  <section class="section live-data-section" id="live-data">
+    <div class="container">
+      <div class="section-label">HARDWARE IOT</div>
+      <h2 class="section-title">Live Data from ESP32</h2>
+      <p class="section-sub">Real-time sensor readings streamed over WiFi/USB from the ESP32 microcontroller.</p>
+
+      <div class="live-data-wrap">
+        <!-- Connection Status -->
+        <div class="conn-status-bar">
+          <div class="conn-dot-group">
+            <span class="conn-dot active"></span>
+            <span class="conn-label">Connected</span>
+          </div>
+          <div class="conn-receiving">
+            <span class="conn-dot pulse-green"></span>
+            <span>Receiving data...</span>
+          </div>
+          <div class="conn-update-note">
+            <span class="clock-icon">🕐</span>
+            Data updates every 2 seconds from backend server
+          </div>
+        </div>
+
+        <!-- Live Metric Cards -->
+        <div class="live-metrics-grid">
+          <div class="live-metric-card" id="lm-hr">
+            <div class="lm-icon">❤️</div>
+            <div class="lm-label">Heart Rate</div>
+            <div class="lm-value-wrap">
+              <span class="lm-value" id="lmHR">92</span>
+              <span class="lm-unit">bpm</span>
+            </div>
+            <div class="lm-pulse-bar">
+              <div class="lm-pulse-fill" id="lmHRBar" style="width:61%"></div>
+            </div>
+            <div class="lm-status moderate" id="lmHRStatus">⚠️ Moderate</div>
+          </div>
+
+          <div class="live-metric-card" id="lm-temp">
+            <div class="lm-icon">🌡️</div>
+            <div class="lm-label">Temperature</div>
+            <div class="lm-value-wrap">
+              <span class="lm-value" id="lmTemp">37.0</span>
+              <span class="lm-unit">°C</span>
+            </div>
+            <div class="lm-pulse-bar">
+              <div class="lm-pulse-fill safe" id="lmTempBar" style="width:40%"></div>
+            </div>
+            <div class="lm-status safe" id="lmTempStatus">✅ Normal</div>
+          </div>
+
+          <div class="live-metric-card risk-metric" id="lm-risk">
+            <div class="lm-icon">⚠️</div>
+            <div class="lm-label">Risk Level</div>
+            <div class="lm-value-wrap">
+              <span class="lm-value risk-val" id="lmRisk">Moderate</span>
+            </div>
+            <div class="lm-risk-bar-wrap">
+              <canvas id="lmRiskGauge" width="140" height="75"></canvas>
+            </div>
+            <div class="lm-status moderate" id="lmRiskStatus">⚠️ Monitor Closely</div>
+          </div>
+
+          <div class="live-metric-card" id="lm-spo2">
+            <div class="lm-icon">🫁</div>
+            <div class="lm-label">Blood Oxygen</div>
+            <div class="lm-value-wrap">
+              <span class="lm-value" id="lmSpo2">96</span>
+              <span class="lm-unit">%</span>
+            </div>
+            <div class="lm-pulse-bar">
+              <div class="lm-pulse-fill safe" id="lmSpo2Bar" style="width:96%"></div>
+            </div>
+            <div class="lm-status safe" id="lmSpo2Status">✅ Normal</div>
+          </div>
+        </div>
+
+        <!-- ECG Strip -->
+        <div class="live-ecg-strip">
+          <div class="ecg-header">
+            <span class="ecg-label-sm">📈 Live ECG from ESP32</span>
+            <span class="ecg-live-badge">● LIVE</span>
+            <span class="ecg-source">Source: MAX30100 via ESP32 → Backend API</span>
+          </div>
+          <canvas id="ecgCanvas" width="1000" height="80"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 3. VOICE AI INTERACTION PANEL ─── -->
+  <section class="section ai-interface" id="demo">
+    <div class="container">
+      <div class="section-label">VOICE AI</div>
+      <h2 class="section-title">Talk to Your AI Health Guardian</h2>
+      <p class="section-sub">Press the mic button and speak your symptoms. JeevanRakshak listens, analyses, and responds
+        instantly.</p>
+
+      <div class="ai-demo-wrap">
+        <!-- Laptop Frame -->
+        <div class="demo-laptop">
+          <div class="demo-screen">
+            <div class="demo-topbar">
+              <div class="dot-group">
+                <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+              </div>
+              <span class="demo-topbar-title">JeevanRakshak Voice AI Interface v2.1</span>
+              <span class="demo-status-dot"></span>
+            </div>
+
+            <!-- Language Selector -->
+            <div class="lang-selector-bar">
+              <div class="lang-selector" onclick="toggleLangDropdown()">
+                <span id="selectedLang">🇮🇳 English</span>
+                <span class="lang-arrow">▾</span>
+              </div>
+              <div class="lang-dropdown" id="langDropdown">
+                <div class="lang-option" onclick="setLanguage('en-IN')">🇮🇳 English</div>
+                <div class="lang-option" onclick="setLanguage('hi-IN')">🇮🇳 Hindi</div>
+                <div class="lang-option" onclick="setLanguage('ta-IN')">🇮🇳 Tamil</div>
+                <div class="lang-option" onclick="setLanguage('te-IN')">🇮🇳 Telugu</div>
+                <div class="lang-option" onclick="setLanguage('ml-IN')">🇮🇳 Malayalam</div>
+                <div class="lang-option" onclick="setLanguage('kn-IN')">🇮🇳 Kannada</div>
+                <div class="lang-option" onclick="setLanguage('mr-IN')">🇮🇳 Marathi</div>
+                <div class="lang-option" onclick="setLanguage('gu-IN')">🇮🇳 Gujarati</div>
+                <div class="lang-option" onclick="setLanguage('bn-IN')">🇮🇳 Bengali</div>
+                <div class="lang-option" onclick="setLanguage('or-IN')">🇮🇳 Odia</div>
+                <div class="lang-option" onclick="setLanguage('ur-PK')">🇵🇰 Urdu</div>
+                <div class="lang-option" onclick="setLanguage('fr-FR')">🇫🇷 French</div>
+                <div class="lang-option" onclick="setLanguage('es-ES')">🇪🇸 Spanish</div>
+                <div class="lang-option" onclick="setLanguage('de-DE')">🇩🇪 German</div>
+              </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-area" id="chatArea">
+              <div class="chat-msg system">
+                <span class="chat-avatar sys">🤖</span>
+                <div class="chat-bubble">
+                  Namaste! I'm JeevanRakshak, your AI health assistant. 🏥<br><br>
+                  <b>How to use:</b><br>
+                  🎙 Press the mic button and speak your symptoms<br>
+                  ⌨️ Or type your symptoms below<br>
+                  🌐 Select your language from the dropdown above<br><br>
+                  I support <b>Tamil, Telugu, Hindi, English</b> and 11 more languages.
+                </div>
+              </div>
+            </div>
+
+            <!-- Voice Input Bar -->
+            <div class="voice-bar">
+              <div class="text-input-wrap">
+                <input type="text" id="textInput" class="text-input" placeholder="Type your symptoms here..." 
+                       onkeydown="if(event.key==='Enter')sendTextInput()" />
+                <button class="text-send-btn" onclick="sendTextInput()" title="Send">➤</button>
+              </div>
+              <div class="voice-divider">or</div>
+              <div class="wave-wrap">
+                <canvas id="waveCanvas" width="200" height="48"></canvas>
+                <span class="wave-label" id="waveLabel">Tap to Speak</span>
+              </div>
+              <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="Tap to Speak">
+                <span class="mic-icon">🎙</span>
+              </button>
+              <div class="speaker-ind" id="speakerInd">
+                <span>🔊</span>
+                <div class="speaker-bars">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="multilang-banner">
+              🌐 <b>Multilingual Support</b> — Tamil · Telugu · Hindi · English · Kannada · Marathi · Bengali · Gujarati
+              +7 more
+            </div>
+          </div>
+          <div class="demo-base">
+            <div class="demo-trackpad"></div>
+          </div>
+        </div>
+
+        <!-- Side Panel -->
+        <div class="ai-side-panel">
+          <div class="side-card">
+            <div class="side-card-icon">🎯</div>
+            <h4>Symptom Analysis</h4>
+            <p>AI cross-references voice symptoms with real ESP32 sensor vitals for accurate risk scoring.</p>
+          </div>
+          <div class="side-card">
+            <div class="side-card-icon">🌐</div>
+            <h4>Any Language</h4>
+            <p>Speak in your mother tongue — Tamil, Telugu, Hindi, English, or any Indian language.</p>
+          </div>
+          <div class="side-card">
+            <div class="side-card-icon">⚡</div>
+            <h4>Instant Response</h4>
+            <p>AI processes your symptoms and responds with medical advice in under 3 seconds.</p>
+          </div>
+          <div class="side-card">
+            <div class="side-card-icon">📞</div>
+            <h4>Auto Alert</h4>
+            <p>Critical risks automatically notify family & dispatch emergency services.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HEALTH MONITORING DASHBOARD ─── -->
+  <section class="section dashboard-section" id="dashboard">
+    <div class="container">
+      <div class="section-label">REAL-TIME MONITORING</div>
+      <h2 class="section-title">Live Health Dashboard</h2>
+      <p class="section-sub">Continuous sensor data updated every 2 seconds, visualized in real time.</p>
+
+      <div class="vitals-grid">
+        <div class="vital-card" id="card-hr">
+          <div class="vital-icon">❤️</div>
+          <div class="vital-label">Heart Rate</div>
+          <div class="vital-value" id="hrVal">92</div>
+          <div class="vital-unit">bpm</div>
+          <div class="vital-bar-wrap">
+            <div class="vital-bar" id="hrBar" style="width:61%"></div>
+          </div>
+          <div class="vital-status moderate">Moderate</div>
+          <canvas class="vital-sparkline" id="hrSparkline" width="160" height="36"></canvas>
+        </div>
+
+        <div class="vital-card" id="card-temp">
+          <div class="vital-icon">🌡️</div>
+          <div class="vital-label">Temperature</div>
+          <div class="vital-value" id="tempVal">37.0</div>
+          <div class="vital-unit">°C</div>
+          <div class="vital-bar-wrap">
+            <div class="vital-bar safe" id="tempBar" style="width:40%"></div>
+          </div>
+          <div class="vital-status safe">Normal</div>
+          <canvas class="vital-sparkline" id="tempSparkline" width="160" height="36"></canvas>
+        </div>
+
+        <div class="vital-card" id="card-spo2">
+          <div class="vital-icon">🫁</div>
+          <div class="vital-label">SpO2</div>
+          <div class="vital-value" id="spo2Val">96</div>
+          <div class="vital-unit">%</div>
+          <div class="vital-bar-wrap">
+            <div class="vital-bar safe" id="spo2Bar" style="width:96%"></div>
+          </div>
+          <div class="vital-status safe">Normal</div>
+          <canvas class="vital-sparkline" id="spo2Sparkline" width="160" height="36"></canvas>
+        </div>
+
+        <div class="vital-card risk-card" id="card-risk">
+          <div class="vital-icon">⚠️</div>
+          <div class="vital-label">Risk Level</div>
+          <div class="vital-value risk-text moderate" id="riskText">Moderate</div>
+          <div class="vital-unit">65% score</div>
+          <div class="risk-gauge-wrap">
+            <canvas id="riskGauge" width="160" height="90"></canvas>
+          </div>
+          <div class="vital-status moderate">Monitor closely</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 4. EMERGENCY ALERT SYSTEM ─── -->
+  <section class="section emergency-section" id="emergency">
+    <div class="container">
+      <div class="section-label">EMERGENCY RESPONSE</div>
+      <h2 class="section-title">Automatic Emergency System</h2>
+      <p class="section-sub">When risk turns critical, JeevanRakshak acts immediately — SMS, calls, and ambulance
+        dispatch.</p>
+
+      <div class="alert-demo">
+        <div class="alert-trigger">
+          <div class="alert-trigger-icon pulse-red">🚨</div>
+          <div class="alert-trigger-text">
+            <b>Critical Alert Detection</b>
+            <span>Click below to simulate a critical health emergency alert</span>
+          </div>
+          <button class="btn-danger" id="emergencyBtn" onclick="triggerAlert()">Send Emergency Alert</button>
+        </div>
+
+        <!-- Alert Status -->
+        <div class="alert-status-row" id="alertStatusRow" style="display:none">
+          <div class="alert-status-item success">
+            <span class="ast-icon">✅</span>
+            <span>SMS Sent to Family</span>
+          </div>
+          <div class="alert-status-item danger">
+            <span class="ast-icon">🚨</span>
+            <span>Alert Triggered</span>
+          </div>
+          <div class="alert-status-item info">
+            <span class="ast-icon">🚑</span>
+            <span>Ambulance Dispatched</span>
+          </div>
+        </div>
+
+        <div class="alert-cards" id="alertCards">
+          <div class="alert-card sms-card">
+            <div class="alert-card-header">
+              <span>📩</span> SMS to Family
+            </div>
+            <div class="alert-preview">
+              <div class="sms-phone">
+                <div class="sms-bubble">
+                  🚨 <b>HEALTH ALERT</b> – JeevanRakshak<br />
+                  Patient's health is critical (Risk: 88%).<br />
+                  SpO2: 88% | HR: 118 | Temp: 38.8°C<br />
+                  📌 Location: Detected automatically<br />
+                  <b>Critical health condition detected.</b><br />
+                  Ambulance dispatched. Please respond.<br />
+                  <span class="sms-time">02 Apr 2026 · 11:26 AM</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert-card ambulance-card">
+            <div class="alert-card-header">
+              <span>🚑</span> Ambulance Dispatch
+            </div>
+            <div class="ambulance-vis">
+              <div class="amb-track">
+                <div class="ambulance-icon" id="ambIcon">🚑</div>
+              </div>
+              <div class="amb-info">
+                <div class="amb-row"><span>ETA</span><b>7 min</b></div>
+                <div class="amb-row"><span>Unit</span><b>AMB-04</b></div>
+                <div class="amb-row"><span>Status</span><b class="green-text">En Route</b></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert-card voice-alert-card">
+            <div class="alert-card-header">
+              <span>📣</span> Voice Alert (Local Language)
+            </div>
+            <div class="voice-alert-content">
+              <div class="voice-alert-text">
+                "नमस्ते, यह JeevanRakshak है। मरीज़ की तबीयत गंभीर है। कृपया तुरंत अस्पताल पहुंचें।"
+              </div>
+              <div class="voice-alert-sub">(Hindi: Hello, this is JeevanRakshak. Patient's health is critical. Please
+                reach the hospital immediately.)</div>
+              <div class="voice-play-bar">
+                <span>🔊</span>
+                <div class="voice-play-wave">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 5. DATABASE STATUS PANEL ─── -->
+  <section class="section db-section" id="db-status">
+    <div class="container">
+      <div class="section-label">DATA STORAGE</div>
+      <h2 class="section-title">Database Status</h2>
+      <p class="section-sub">All sensor readings are automatically stored in real-time to the cloud database.</p>
+
+      <div class="db-wrap">
+        <!-- Status Cards -->
+        <div class="db-status-row">
+          <div class="db-status-card success">
+            <div class="db-status-icon">✅</div>
+            <div class="db-status-text">
+              <b>Data Stored Successfully</b>
+              <span>Last write: 2 seconds ago</span>
+            </div>
+          </div>
+          <div class="db-status-card success">
+            <div class="db-status-icon">🔗</div>
+            <div class="db-status-text">
+              <b>Connected to Database</b>
+              <span>MongoDB · localhost:27017</span>
+            </div>
+          </div>
+          <div class="db-status-card info">
+            <div class="db-status-icon">📊</div>
+            <div class="db-status-text">
+              <b>Records Stored</b>
+              <span id="dbRecordCount">1,247 entries</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Last Record Display -->
+        <div class="db-last-record">
+          <div class="db-record-header">
+            <span class="db-record-title">📋 Last Stored Record</span>
+            <span class="db-record-time" id="dbLastTime">02 Apr 2026 · 11:26:52 AM</span>
+          </div>
+          <div class="db-record-grid">
+            <div class="db-field">
+              <span class="db-field-label">Heart Rate</span>
+              <span class="db-field-value" id="dbHR">92 bpm</span>
+            </div>
+            <div class="db-field">
+              <span class="db-field-label">Temperature</span>
+              <span class="db-field-value" id="dbTemp">37.0°C</span>
+            </div>
+            <div class="db-field">
+              <span class="db-field-label">SpO2</span>
+              <span class="db-field-value" id="dbSpo2">96%</span>
+            </div>
+            <div class="db-field">
+              <span class="db-field-label">Risk Level</span>
+              <span class="db-field-value warn" id="dbRisk">Moderate</span>
+            </div>
+            <div class="db-field">
+              <span class="db-field-label">Timestamp</span>
+              <span class="db-field-value" id="dbTimestamp">2026-04-02 11:26:52</span>
+            </div>
+            <div class="db-field">
+              <span class="db-field-label">Device ID</span>
+              <span class="db-field-value">ESP32-JR-001</span>
+            </div>
+          </div>
+          <div class="db-json-preview">
+            <span class="db-json-label">📄 Raw JSON:</span>
+            <code
+              id="dbJsonPreview">{"hr":92,"temp":37.0,"spo2":96,"risk":"Moderate","device":"ESP32-JR-001","ts":"2026-04-02T11:26:52"}</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 6. SYSTEM CONNECTION STATUS ─── -->
+  <section class="section conn-section" id="system-status">
+    <div class="container">
+      <div class="section-label">SYSTEM HEALTH</div>
+      <h2 class="section-title">System Connection Status</h2>
+      <p class="section-sub">Live status of all system components and connections.</p>
+
+      <div class="conn-grid">
+        <div class="conn-card active">
+          <div class="conn-card-icon">📡</div>
+          <div class="conn-card-body">
+            <div class="conn-card-title">ESP32 Connected</div>
+            <div class="conn-card-sub">Device: ESP32-JR-001 · WiFi Signal: Strong</div>
+          </div>
+          <div class="conn-check">✔</div>
+        </div>
+        <div class="conn-card active">
+          <div class="conn-card-icon">💻</div>
+          <div class="conn-card-body">
+            <div class="conn-card-title">Backend Server Running</div>
+            <div class="conn-card-sub">Node.js Express · Port 5000 · Uptime: 99.8%</div>
+          </div>
+          <div class="conn-check">✔</div>
+        </div>
+        <div class="conn-card active">
+          <div class="conn-card-icon">🗄️</div>
+          <div class="conn-card-body">
+            <div class="conn-card-title">Database Connected</div>
+            <div class="conn-card-sub">MongoDB · localhost:27017 · Active</div>
+          </div>
+          <div class="conn-check">✔</div>
+        </div>
+        <div class="conn-card active">
+          <div class="conn-card-icon">🔔</div>
+          <div class="conn-card-body">
+            <div class="conn-card-title">Alerts Enabled</div>
+            <div class="conn-card-sub">Cloud Functions · Firebase · Ready</div>
+          </div>
+          <div class="conn-check">✔</div>
+        </div>
+        <div class="conn-card active">
+          <div class="conn-card-icon">🌐</div>
+          <div class="conn-card-body">
+            <div class="conn-card-title">Website Live</div>
+            <div class="conn-card-sub">Dashboard · Fetching data every 2s</div>
+          </div>
+          <div class="conn-check">✔</div>
+        </div>
+        <div class="conn-card active">
+          <div class="conn-card-icon">🧠</div>
+          <div class="conn-card-body">
+            <div class="conn-card-title">AI Model Active</div>
+            <div class="conn-card-sub">OpenAI GPT-4o-mini · Multilingual</div>
+          </div>
+          <div class="conn-check">✔</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 7. SYSTEM FLOW VISUAL ─── -->
+  <section class="section workflow-section" id="workflow">
+    <div class="container">
+      <div class="section-label">SYSTEM ARCHITECTURE</div>
+      <h2 class="section-title">How JeevanRakshak Works</h2>
+      <p class="section-sub">From body sensors to intelligent decisions — in under 2 seconds.</p>
+
+      <!-- System Flow Diagram -->
+      <div class="flow-diagram-label">System Data Flow:</div>
+      <div class="flow-wrap">
+        <div class="flow-step" data-step="1">
+          <div class="flow-icon-wrap">
+            <div class="flow-icon">💓</div>
+          </div>
+          <div class="flow-title">Sensors</div>
+          <div class="flow-desc">Pulse, SpO2 & Temp sensors read body data</div>
+        </div>
+        <div class="flow-arrow animated-arrow">→</div>
+
+        <div class="flow-step" data-step="2">
+          <div class="flow-icon-wrap">
+            <div class="flow-icon">📡</div>
+          </div>
+          <div class="flow-title">ESP32</div>
+          <div class="flow-desc">Microcontroller sends data wirelessly</div>
+        </div>
+        <div class="flow-arrow animated-arrow">→</div>
+
+        <div class="flow-step" data-step="3">
+          <div class="flow-icon-wrap">
+            <div class="flow-icon">⚙️</div>
+          </div>
+          <div class="flow-title">Backend Server</div>
+          <div class="flow-desc">Node.js API receives and processes data</div>
+        </div>
+        <div class="flow-arrow animated-arrow">→</div>
+
+        <div class="flow-step" data-step="4">
+          <div class="flow-icon-wrap">
+            <div class="flow-icon">🌐</div>
+          </div>
+          <div class="flow-title">Website</div>
+          <div class="flow-desc">Dashboard fetches and displays live data</div>
+        </div>
+        <div class="flow-arrow animated-arrow">→</div>
+
+        <div class="flow-step" data-step="5">
+          <div class="flow-icon-wrap">
+            <div class="flow-icon">🗄️</div>
+          </div>
+          <div class="flow-title">Database</div>
+          <div class="flow-desc">All readings saved to MongoDB</div>
+        </div>
+        <div class="flow-arrow animated-arrow">→</div>
+
+        <div class="flow-step highlight-step" data-step="6">
+          <div class="flow-icon-wrap">
+            <div class="flow-icon">🚨</div>
+          </div>
+          <div class="flow-title">Alert System</div>
+          <div class="flow-desc">SMS + ambulance if critical risk detected</div>
+        </div>
+      </div>
+
+      <!-- Flow Label -->
+      <div class="flow-label-bar">
+        <span class="flow-label-chip">Sensors → ESP32 → Backend Server → Website → Database → Alert System</span>
+      </div>
+
+      <!-- ─── 8. PROTOTYPE SETUP VISUAL ─── -->
+      <div class="setup-visual" id="setup">
+        <div class="setup-title">🔎 Prototype Hardware Setup</div>
+        <div class="setup-diagram">
+          <div class="setup-item">
+            <div class="setup-box sensor-box">
+              <div class="setup-box-icon">💓</div>
+              <div>Pulse Sensor</div>
+              <div class="setup-badge">MAX30100</div>
+            </div>
+            <div class="setup-wire wire-h"></div>
+          </div>
+          <div class="setup-item">
+            <div class="setup-box sensor-box">
+              <div class="setup-box-icon">🌡</div>
+              <div>Temp Sensor</div>
+              <div class="setup-badge">DS18B20</div>
+            </div>
+            <div class="setup-wire wire-h"></div>
+          </div>
+          <div class="setup-box esp-box">
+            <div class="setup-box-icon">📡</div>
+            <div>ESP32</div>
+            <div class="esp-chip"></div>
+            <div class="setup-badge">WiFi / USB</div>
+          </div>
+          <div class="setup-wire wire-usb">
+            <span>WiFi / USB</span>
+            <div class="wire-anim"></div>
+          </div>
+          <div class="setup-box laptop-box">
+            <div class="setup-box-icon">💻</div>
+            <div>Laptop</div>
+            <div class="laptop-screen-mini">
+              <span>JeevanRakshak Dashboard</span>
+            </div>
+          </div>
+        </div>
+        <div class="setup-note">
+          📎 Sensors connect to ESP32 via GPIO pins · ESP32 connects to laptop via WiFi/USB · Laptop runs dashboard +
+          backend server
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 9. FEATURES ─── -->
+  <section class="section features-section" id="features">
+    <div class="container">
+      <div class="section-label">CAPABILITIES</div>
+      <h2 class="section-title">Key Features</h2>
+      <p class="section-sub">Built ground-up for real healthcare challenges.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📡</div>
+          <h3>Real-Time Health Monitoring</h3>
+          <p>Continuous sensor data from ESP32 updated every 2 seconds. Heart rate, temperature, SpO2 — all live.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>AI-Based Risk Detection</h3>
+          <p>ML model analyses vitals and voice symptoms to classify risk as Normal, Moderate, or Critical.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎙</div>
+          <h3>Voice Interaction (No Typing)</h3>
+          <p>Zero typing required. Just speak your symptoms — the AI does the rest. Accessible for all users.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Multilingual Support</h3>
+          <p>Speaks and understands Tamil, Telugu, Hindi, English, Kannada, Malayalam, Marathi + 8 more.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🚨</div>
+          <h3>Automatic Alert System</h3>
+          <p>Automatically sends SMS to family & dispatches ambulance when risk reaches critical threshold.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Works Without Mobile App</h3>
+          <p>Runs entirely on a laptop via browser. No smartphone needed. No app installs required.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── VALUE PROPOSITION ─── -->
+  <section class="section uvp-section">
+    <div class="container">
+      <div class="uvp-grid">
+        <div class="uvp-card">
+          <div class="uvp-icon">🛡️</div>
+          <div class="uvp-heading">Prevention Over Treatment</div>
+          <p>Catch health issues before they become emergencies. Save lives, save costs.</p>
+        </div>
+        <div class="uvp-card highlight-uvp">
+          <div class="uvp-icon">⏰</div>
+          <div class="uvp-heading">Detect Before It's Too Late</div>
+          <p>Early warning system powered by continuous sensor monitoring and AI analysis.</p>
+        </div>
+        <div class="uvp-card">
+          <div class="uvp-icon">🗣️</div>
+          <div class="uvp-heading">AI That Speaks Your Language</div>
+          <p>Every Indian should have access to intelligent healthcare — in their own words.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">⚒ JeevanRakshak</div>
+          <p>AI + IoT Healthcare System<br />Real-time health monitoring for rural India.</p>
+          <div class="footer-badges">
+            <span class="badge">AI</span>
+            <span class="badge">IoT</span>
+            <span class="badge">ESP32</span>
+            <span class="badge">2026</span>
+          </div>
+        </div>
+        <div class="footer-info">
+          <h4>Project Details</h4>
+          <ul>
+            <li>📎 Type: AI + IoT Healthcare System</li>
+            <li>💻 Platform: Laptop + ESP32 + Sensors</li>
+            <li>🧠 AI: GPT-4o-mini + Voice Recognition</li>
+            <li>🌐 Languages: Tamil, Telugu, Hindi, English +11</li>
+            <li>💰 Hardware Cost: ~₹2,000</li>
+          </ul>
+        </div>
+        <div class="footer-info">
+          <h4>Tech Stack</h4>
+          <ul>
+            <li>⚙️ ESP32 (sensor bridge + WiFi)</li>
+            <li>🟢 Node.js Express (backend API)</li>
+            <li>🗣️ Web Speech API + TTS</li>
+            <li>🤖 OpenAI GPT-4o-mini</li>
+            <li>🗄️ MongoDB (Database)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 JeevanRakshak · AI Health Guardian · India</span>
+        <span class="footer-tagline">"Your Health, Before It's Too Late"</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+
+</html>
