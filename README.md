@@ -113,31 +113,149 @@ The system is divided into 4 layers:
 * 📈 Real-time monitoring dashboard
 
 ---
+## 📸 Screenshots & Feature Demonstration
 
-## 📸 Screenshots
+### i) 🎤 Voice Checking
 
-### 🖥️ Main Interface
+The system verifies user voice input and detects the spoken language. It enables **multilingual interaction**, allowing users to communicate naturally with the AI health assistant.
 
-![Home](./screenshots/home.png)
+![Voice Checking](./screenshots/voice-check.png)
+---
 
-### 📊 Health Dashboard
+### ii) 📡 Live Data from Sensors
+
+Displays real-time sensor data received from Arduino Uno R4, including:
+
+* Heart rate (Pulse sensor)
+* Body temperature (DHT11)
+
+![ESP32 Data](./screenshots/esp32-data.png)
+Ensures continuous **live health monitoring**.
+---
+
+### iii) 🗣️ Talk to Your AI Health Guardian
+
+Users can interact with the system using voice.
+The AI responds intelligently, providing:
+
+* Health status updates
+* Alerts
+* Guidance
+  
+![AI Interaction](./screenshots/ai-chat.png)
+Supports **natural conversation in multiple languages**.
+
+---
+
+### iv) 📊 Live Health Dashboard
+
+A real-time dashboard showing:
+
+* Current health metrics
+* Risk level (Normal / Moderate / Critical)
+* Visual indicators for easy understanding
 
 ![Dashboard](./screenshots/dashboard.png)
+Designed for **clear and quick monitoring**.
 
-### 🎤 Voice Interaction
+---
 
-![Voice](./screenshots/voice.png)
+### v) ⚠️ Before Sending Alert
 
-### 🚨 Emergency Alert Sent
+Shows the system detecting abnormal conditions and preparing to trigger an alert.
+Acts as an intermediate stage before emergency escalation.
 
-![Alert](./screenshots/alert.png)
+![Before Alert](./screenshots/before-alert.png)
+---
 
-### 🗄️ Data Storage
+### vi) 🚨 After Sending Alert
+
+When a critical condition is detected:
+
+* Alerts are automatically sent
+* Notifications reach **registered family members**
+* Ensures immediate response in emergencies
+  
+![After Alert](./screenshots/after-alert.png)
+---
+
+### vii) 🗄️ Database Status
+
+Displays storage of:
+
+* Health records
+* Previous readings
+* Alert history
 
 ![Database](./screenshots/database.png)
+Ensures proper **data tracking and reliability**.
 
-> 📌 Replace with your actual screenshots
+---
 
+### viii) 🔌 System Connection Status
+
+Shows the connection between:
+
+* Sensors
+* Microcontroller (Arduino / ESP32)
+* Web interface
+
+![System Status](./screenshots/system-status.png)
+Confirms system is **active and functioning properly**.
+
+---
+
+### ix) 💻 Inside VS Terminal (Localhost Execution)
+
+Displays the backend running locally:
+
+* Server execution
+* Port connection (localhost)
+* System initialization logs
+
+![Terminal](./screenshots/terminal.png)
+Shows the project is **successfully deployed locally**.
+
+---
+
+### x) ⚙️ Working
+
+Demonstrates the complete workflow:
+
+1. Data collection
+2. Processing
+3. Risk classification
+4. Alert generation
+
+![Working](./screenshots/working.png)
+Represents the **end-to-end system operation**.
+
+---
+
+### xi) 🧪 Prototype
+
+Shows the hardware setup including:
+
+* Pulse sensor (heart rate)
+* DHT11 temperature sensor
+* Arduino Uno R4
+
+![Prototype](./screenshots/prototype.png)
+Represents the **physical implementation of the system**.
+
+---
+
+### xii) ✨ Key Features
+
+* 🔄 Real-time health monitoring
+* 🧠 AI-based risk detection
+* 🎤 Multilingual voice interaction
+* 🚨 Automatic emergency alert system
+* 📊 Live dashboard visualization
+* 🗄️ Health data storage
+* 🔌 IoT-based sensor integration
+* 👵 User-friendly design for elderly
+![Features](./screenshots/features.png)
 ---
 
 ## ⚙️ Setup & Installation
