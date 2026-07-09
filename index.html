@@ -28,6 +28,12 @@
         <li><a href="#live-data">Live Data</a></li>
         <li><a href="#demo">Voice AI</a></li>
         <li><a href="#emergency">Emergency</a></li>
+        <li><a href="#patients">Patients</a></li>
+        <li><a href="#roles">Roles</a></li>
+        <li><a href="#incidents">Incidents</a></li>
+        <li><a href="#sos-dispatch">SOS</a></li>
+        <li><a href="#location">Location</a></li>
+        <li><a href="#health-trends">Trends</a></li>
       </ul>
       <a href="#demo" class="nav-cta">Try Demo</a>
     </div>
@@ -595,6 +601,222 @@
   </section>
 
   <!-- ─── FOOTER ─── -->
+  <!-- PLUTO PATIENT MONITORING -->
+  <section class="section features-section" id="patients">
+    <div class="container">
+      <div class="section-label">PLUTO PATIENTS</div>
+      <h2 class="section-title">Multi-Patient Monitoring</h2>
+      <p class="section-sub">Track child, elderly, and custom patient profiles with mock vitals and emergency status.</p>
+
+      <div class="features-grid">
+        <div class="feature-card pluto-patient-card" data-patient-type="Child">
+          <div class="feature-icon">👧</div>
+          <h3>Anaya Rao</h3>
+          <p>Age 8 · Asthma watch</p>
+          <div class="footer-badges">
+            <span class="badge">HR 86</span>
+            <span class="badge">SpO2 97%</span>
+            <span class="badge">Normal</span>
+          </div>
+        </div>
+        <div class="feature-card pluto-patient-card" data-patient-type="Elderly">
+          <div class="feature-icon">👴</div>
+          <h3>Raman Iyer</h3>
+          <p>Age 72 · Cardiac observation</p>
+          <div class="footer-badges">
+            <span class="badge">HR 112</span>
+            <span class="badge">SpO2 92%</span>
+            <span class="badge">Emergency Ready</span>
+          </div>
+        </div>
+        <div class="feature-card pluto-patient-card" data-patient-type="Custom">
+          <div class="feature-icon">🧑</div>
+          <h3>Meera Shah</h3>
+          <p>Age 34 · Fever recovery</p>
+          <div class="footer-badges">
+            <span class="badge">HR 94</span>
+            <span class="badge">Temp 38.1°C</span>
+            <span class="badge">Monitor</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLUTO ROLES -->
+  <section class="section uvp-section" id="roles">
+    <div class="container">
+      <div class="section-label">PLUTO ROLES</div>
+      <h2 class="section-title">Care Role Selection</h2>
+      <p class="section-sub">Choose the active caregiver view. Your selection is saved on this device.</p>
+
+      <div class="uvp-grid">
+        <button class="uvp-card pluto-role-btn" type="button" data-role="Father">
+          <div class="uvp-icon">👨</div>
+          <div class="uvp-heading">Father</div>
+          <p>Family guardian view for rapid decisions.</p>
+        </button>
+        <button class="uvp-card pluto-role-btn" type="button" data-role="Mother">
+          <div class="uvp-icon">👩</div>
+          <div class="uvp-heading">Mother</div>
+          <p>Daily care view for close observation.</p>
+        </button>
+        <button class="uvp-card pluto-role-btn" type="button" data-role="Doctor">
+          <div class="uvp-icon">🩺</div>
+          <div class="uvp-heading">Doctor</div>
+          <p>Clinical review view for vitals and risk.</p>
+        </button>
+        <button class="uvp-card pluto-role-btn" type="button" data-role="Caregiver">
+          <div class="uvp-icon">🤝</div>
+          <div class="uvp-heading">Caregiver</div>
+          <p>Assisted care view for emergency support.</p>
+        </button>
+      </div>
+      <div class="flow-label-bar" style="margin-top:24px;margin-bottom:0">
+        <span class="flow-label-chip">Selected Role: <span id="selectedRoleText">Not selected</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLUTO INCIDENTS -->
+  <section class="section emergency-section" id="incidents">
+    <div class="container">
+      <div class="section-label">PLUTO INCIDENTS</div>
+      <h2 class="section-title">Manual Incident Triggers</h2>
+      <p class="section-sub">Simulate health and safety incidents without changing the ESP32 live data workflow.</p>
+
+      <div class="features-grid">
+        <button class="feature-card pluto-incident-btn" type="button" data-incident="Fall detected">Fall detected</button>
+        <button class="feature-card pluto-incident-btn" type="button" data-incident="High heart rate">High heart rate</button>
+        <button class="feature-card pluto-incident-btn" type="button" data-incident="Low SpO2">Low SpO2</button>
+        <button class="feature-card pluto-incident-btn" type="button" data-incident="Fever">Fever</button>
+        <button class="feature-card pluto-incident-btn" type="button" data-incident="Emergency SOS">Emergency SOS</button>
+      </div>
+      <div class="alert-status-row" style="display:flex;margin-top:24px">
+        <div class="alert-status-item info">
+          <span class="ast-icon">📋</span>
+          <span id="incidentStatus">No incident triggered</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLUTO SOS DISPATCH -->
+  <section class="section ai-interface" id="sos-dispatch">
+    <div class="container">
+      <div class="section-label">PLUTO SOS</div>
+      <h2 class="section-title">SOS Dispatch Simulator</h2>
+      <p class="section-sub">Prepare a webhook-ready emergency payload for caregiver dispatch or n8n automation.</p>
+
+      <div class="alert-demo">
+        <div class="alert-trigger">
+          <div class="alert-trigger-icon pulse-red">🚨</div>
+          <div class="alert-trigger-text">
+            <b>Caregiver Contact</b>
+            <span>Enter a phone number and simulate emergency dispatch.</span>
+          </div>
+          <input id="caregiverPhone" class="text-input" type="tel" placeholder="+91 98765 43210"
+            style="max-width:220px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 12px" />
+          <button class="btn-danger" type="button" onclick="simulatePlutoSos()">Manual SOS</button>
+        </div>
+        <div class="db-json-preview" style="margin-top:20px">
+          <span class="db-json-label">Webhook payload:</span>
+          <code id="sosPayloadPreview">{"heartRate":72,"spo2":98,"fallDetected":false,"caregiverPhone":""}</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLUTO FALL DETECTION -->
+  <section class="section features-section" id="fall-detection">
+    <div class="container">
+      <div class="section-label">PLUTO FALL DETECTION</div>
+      <h2 class="section-title">Fall Detection State</h2>
+      <p class="section-sub">A mock fall alert card that can be updated from the incident and SOS simulators.</p>
+
+      <div class="live-metrics-grid">
+        <div class="live-metric-card" id="fallStatusCard">
+          <div class="lm-icon">🛡️</div>
+          <div class="lm-label">Fall Detected</div>
+          <div class="lm-value-wrap">
+            <span class="lm-value risk-val" id="fallDetectedText">No</span>
+          </div>
+          <div class="lm-status safe" id="fallAlertState">Stable</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLUTO ALARM -->
+  <section class="section uvp-section" id="alarm">
+    <div class="container">
+      <div class="section-label">PLUTO ALARM</div>
+      <h2 class="section-title">Critical Alarm</h2>
+      <p class="section-sub">Enable or disable browser alarm sound for critical emergency simulations.</p>
+
+      <div class="alert-trigger">
+        <div class="alert-trigger-icon">🔊</div>
+        <div class="alert-trigger-text">
+          <b>Browser Alarm</b>
+          <span id="alarmPreferenceText">Alarm preference loading...</span>
+        </div>
+        <label class="badge" style="cursor:pointer">
+          <input id="alarmToggle" type="checkbox" onchange="togglePlutoAlarm(this.checked)" />
+          Enable alarm
+        </label>
+        <button class="btn-ghost" type="button" onclick="playPlutoAlarm()">Test Alarm</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLUTO LOCATION -->
+  <section class="section features-section" id="location">
+    <div class="container">
+      <div class="section-label">PLUTO LOCATION</div>
+      <h2 class="section-title">Patient Location</h2>
+      <p class="section-sub">Map placeholder for caregiver handoff and emergency response context.</p>
+
+      <div class="setup-visual">
+        <div class="setup-title">📍 Current Patient Position</div>
+        <div style="min-height:260px;border:1px solid rgba(0,255,170,0.18);border-radius:12px;background:linear-gradient(135deg,rgba(0,255,170,0.06),rgba(0,212,255,0.06));display:flex;align-items:center;justify-content:center;text-align:center;padding:24px">
+          <div>
+            <div class="feature-icon">🗺️</div>
+            <h3 style="color:#fff;margin-bottom:8px">Madurai Care Zone</h3>
+            <p style="color:var(--text-dim)">Map placeholder · GPS / caregiver location can connect here later</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLUTO HEALTH TRENDS -->
+  <section class="section ai-interface" id="health-trends">
+    <div class="container">
+      <div class="section-label">PLUTO TRENDS</div>
+      <h2 class="section-title">Health Trends</h2>
+      <p class="section-sub">Mock trend cards for heart rate, temperature, SpO2, and risk score.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Heart Rate</h3>
+          <canvas id="trendHeartRate" width="260" height="90"></canvas>
+        </div>
+        <div class="feature-card">
+          <h3>Temperature</h3>
+          <canvas id="trendTemperature" width="260" height="90"></canvas>
+        </div>
+        <div class="feature-card">
+          <h3>SpO2</h3>
+          <canvas id="trendSpo2" width="260" height="90"></canvas>
+        </div>
+        <div class="feature-card">
+          <h3>Risk Score</h3>
+          <canvas id="trendRisk" width="260" height="90"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer class="footer" id="footer">
     <div class="container">
       <div class="footer-grid">

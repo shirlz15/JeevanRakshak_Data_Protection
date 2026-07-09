@@ -729,6 +729,149 @@ const flowObs = new IntersectionObserver((entries) => {
 const flowWrap = document.querySelector('.flow-wrap');
 if (flowWrap) flowObs.observe(flowWrap);
 
+// Pluto feature layer
+let plutoFallDetected = false;
+
+function setPlutoRole(role) {
+  localStorage.setItem('plutoRole', role);
+  const label = document.getElementById('selectedRoleText');
+  if (label) label.textContent = role;
+  document.querySelectorAll('.pluto-role-btn').forEach((btn) => {
+    const active = btn.dataset.role === role;
+    btn.style.borderColor = active ? 'rgba(0,255,170,0.55)' : '';
+    btn.style.boxShadow = active ? '0 0 24px rgba(0,255,170,0.25)' : '';
+  });
+}
+
+function setPlutoFallDetected(value) {
+  plutoFallDetected = value;
+  const text = document.getElementById('fallDetectedText');
+  const state = document.getElementById('fallAlertState');
+  const card = document.getElementById('fallStatusCard');
+  if (text) {
+    text.textContent = value ? 'Yes' : 'No';
+    text.style.color = value ? 'var(--danger)' : 'var(--neon)';
+  }
+  if (state) {
+    state.className = `lm-status ${value ? 'critical' : 'safe'}`;
+    state.textContent = value ? 'Fall alert active' : 'Stable';
+  }
+  if (card) card.style.borderColor = value ? 'rgba(255,59,59,0.5)' : '';
+}
+
+function triggerPlutoIncident(incident) {
+  const status = document.getElementById('incidentStatus');
+  if (status) status.textContent = `${incident} triggered`;
+  if (incident === 'Fall detected') setPlutoFallDetected(true);
+  if (incident === 'Emergency SOS') {
+    setPlutoFallDetected(true);
+    simulatePlutoSos();
+  }
+  if (incident === 'High heart rate' || incident === 'Low SpO2' || incident === 'Fever') {
+    playPlutoAlarm();
+  }
+}
+
+function getPlutoPayload() {
+  return {
+    heartRate: parseInt(document.getElementById('lmHR')?.textContent, 10) || 72,
+    spo2: parseInt(document.getElementById('lmSpo2')?.textContent, 10) || 98,
+    fallDetected: plutoFallDetected,
+    caregiverPhone: document.getElementById('caregiverPhone')?.value.trim() || ''
+  };
+}
+
+function updateSosPayloadPreview(payload) {
+  const preview = document.getElementById('sosPayloadPreview');
+  if (preview) preview.textContent = JSON.stringify(payload);
+}
+
+function simulatePlutoSos() {
+  const payload = getPlutoPayload();
+  updateSosPayloadPreview(payload);
+  const status = document.getElementById('incidentStatus');
+  if (status) status.textContent = `SOS dispatch simulated for ${payload.caregiverPhone || 'caregiver'}`;
+  playPlutoAlarm();
+}
+
+function togglePlutoAlarm(enabled) {
+  localStorage.setItem('plutoAlarmEnabled', enabled ? 'true' : 'false');
+  const label = document.getElementById('alarmPreferenceText');
+  if (label) label.textContent = enabled ? 'Alarm enabled for critical emergencies' : 'Alarm disabled';
+}
+
+function playPlutoAlarm() {
+  if (localStorage.getItem('plutoAlarmEnabled') !== 'true') return;
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = 880;
+  gain.gain.setValueAtTime(0.001, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.03);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.65);
+}
+
+function drawPlutoTrend(canvasId, values, color) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  ctx.clearRect(0, 0, width, height);
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  for (let y = 18; y < height; y += 18) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+  }
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 8;
+  values.forEach((value, index) => {
+    const x = (index / (values.length - 1)) * width;
+    const y = height - 10 - ((value - min) / range) * (height - 20);
+    index === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedRole = localStorage.getItem('plutoRole');
+  if (savedRole) setPlutoRole(savedRole);
+  const alarmEnabled = localStorage.getItem('plutoAlarmEnabled') === 'true';
+  const alarmToggle = document.getElementById('alarmToggle');
+  if (alarmToggle) alarmToggle.checked = alarmEnabled;
+  togglePlutoAlarm(alarmEnabled);
+  document.querySelectorAll('.pluto-role-btn').forEach((btn) => {
+    btn.addEventListener('click', () => setPlutoRole(btn.dataset.role));
+  });
+  document.querySelectorAll('.pluto-incident-btn').forEach((btn) => {
+    btn.addEventListener('click', () => triggerPlutoIncident(btn.dataset.incident));
+  });
+  const phone = document.getElementById('caregiverPhone');
+  if (phone) phone.addEventListener('input', () => updateSosPayloadPreview(getPlutoPayload()));
+  updateSosPayloadPreview(getPlutoPayload());
+  drawPlutoTrend('trendHeartRate', [72, 76, 82, 88, 84, 92, 86, 90], '#00ffaa');
+  drawPlutoTrend('trendTemperature', [36.6, 36.8, 37.1, 37.4, 37.2, 38.1, 37.6, 37.0], '#ffb300');
+  drawPlutoTrend('trendSpo2', [98, 97, 96, 95, 96, 94, 95, 97], '#00d4ff');
+  drawPlutoTrend('trendRisk', [18, 24, 36, 42, 39, 58, 44, 31], '#ff3b3b');
+});
+
 // ── Close dropdowns on outside click ──
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.lang-selector')) {
