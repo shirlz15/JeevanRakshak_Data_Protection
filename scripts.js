@@ -58,6 +58,7 @@ let recognition = null;
 let currentLang = 'en-IN';
 let isProcessing = false;
 let speechSynthUtterance = null;
+let currentRiskScore = 20;
 
 // Language configuration
 const LANGUAGES = {
@@ -329,8 +330,8 @@ function toggleMic() {
         addChatMessage('', 'typing');
 
         // Also post the current vitals to the backend
-        const hr = parseInt(document.getElementById('hrVal')?.textContent) || 72;
-        const temp = parseFloat(document.getElementById('tempVal')?.textContent) || 36.7;
+        const hr = parseInt(document.getElementById('lmHR')?.textContent) || 72;
+        const temp = parseFloat(document.getElementById('lmTemp')?.textContent) || 36.7;
         postHealthData(hr, temp);
 
         // Send to AI
@@ -340,7 +341,7 @@ function toggleMic() {
         removeTypingIndicator();
 
         // Calculate a risk score from current vitals
-        const riskScore = parseInt(document.querySelector('#card-risk .vital-unit')?.textContent) || 20;
+        const riskScore = currentRiskScore;
 
         // Add AI response
         addChatMessage(aiReply, 'system', { riskScore, lang: currentLang });
@@ -412,15 +413,15 @@ async function sendTextInput() {
   addChatMessage('', 'typing');
 
   // Post current vitals
-  const hr = parseInt(document.getElementById('hrVal')?.textContent) || 72;
-  const temp = parseFloat(document.getElementById('tempVal')?.textContent) || 36.7;
+  const hr = parseInt(document.getElementById('lmHR')?.textContent) || 72;
+  const temp = parseFloat(document.getElementById('lmTemp')?.textContent) || 36.7;
   postHealthData(hr, temp);
 
   // Send to AI
   const aiReply = await sendToVoiceAPI(text);
   removeTypingIndicator();
 
-  const riskScore = parseInt(document.querySelector('#card-risk .vital-unit')?.textContent) || 20;
+  const riskScore = currentRiskScore;
   addChatMessage(aiReply, 'system', { riskScore, lang: currentLang });
   speakText(aiReply, currentLang);
 
@@ -553,12 +554,9 @@ function updateVitals() {
   const hr = clamp(Math.round(hrTarget + (Math.random() - 0.5) * hrJitter), 40, 200);
   hrHistory.push(hr); if (hrHistory.length > 14) hrHistory.shift();
   const hrStatus = hr < 85 ? 'safe' : hr < 110 ? 'moderate' : 'critical';
-  setVal('hrVal', hr); setVal('lmHR', hr);
-  updateBar('hrBar', hr / 200 * 100, hrStatus === 'safe');
+  setVal('lmHR', hr);
   updateBar('lmHRBar', hr / 200 * 100, hrStatus === 'safe');
-  updateCard('card-hr', 'hrBar', hr / 200 * 100, hrStatus);
   updateStatusBadge('lmHRStatus', hrStatus);
-  drawSparkline('hrSparkline', hrHistory, hrStatus === 'critical' ? '#ff3b3b' : hrStatus === 'moderate' ? '#ffb300' : '#00ffaa');
 
   // ── Temperature ──
   const tempTarget = critical ? 39.6 : 36.7;
@@ -566,12 +564,9 @@ function updateVitals() {
   const temp = clamp(+(tempTarget + (Math.random() - 0.5) * tempJitter).toFixed(1), 35.0, 42.0);
   tempHistory.push(temp); if (tempHistory.length > 14) tempHistory.shift();
   const tempStatus = temp < 37.5 ? 'safe' : temp < 38.5 ? 'moderate' : 'critical';
-  setVal('tempVal', temp.toFixed(1)); setVal('lmTemp', temp.toFixed(1));
-  updateBar('tempBar', (temp - 35) / 7 * 100, tempStatus === 'safe');
+  setVal('lmTemp', temp.toFixed(1));
   updateBar('lmTempBar', (temp - 35) / 7 * 100, tempStatus === 'safe');
-  updateCard('card-temp', 'tempBar', (temp - 35) / 7 * 100, tempStatus, tempStatus === 'safe');
   updateStatusBadge('lmTempStatus', tempStatus);
-  drawSparkline('tempSparkline', tempHistory, tempStatus === 'critical' ? '#ff3b3b' : tempStatus === 'moderate' ? '#ffb300' : '#00ffaa');
 
   // ── SpO2 ──
   const spo2Target = critical ? 84 : 98;
@@ -579,29 +574,19 @@ function updateVitals() {
   const spo2 = clamp(Math.round(spo2Target + (Math.random() - 0.5) * spo2Jitter), 60, 100);
   spo2History.push(spo2); if (spo2History.length > 14) spo2History.shift();
   const spo2Status = spo2 >= 95 ? 'safe' : spo2 >= 90 ? 'moderate' : 'critical';
-  setVal('spo2Val', spo2); setVal('lmSpo2', spo2);
-  updateBar('spo2Bar', spo2, spo2Status === 'safe');
+  setVal('lmSpo2', spo2);
   updateBar('lmSpo2Bar', spo2, spo2Status === 'safe');
-  updateCard('card-spo2', 'spo2Bar', spo2, spo2Status, spo2Status === 'safe');
   updateStatusBadge('lmSpo2Status', spo2Status);
-  drawSparkline('spo2Sparkline', spo2History, spo2Status === 'critical' ? '#ff3b3b' : spo2Status === 'moderate' ? '#ffb300' : '#00d4ff');
 
   // ── Risk ──
   const risk = clamp(Math.round((hr / 200 * 40) + ((temp - 35) / 7 * 30) + ((100 - spo2) / 40 * 30)), 0, 100);
+  currentRiskScore = risk;
   const riskLevel = risk < 40 ? 'Normal' : risk < 70 ? 'Moderate' : 'Critical';
   const riskStatus = risk < 40 ? 'safe' : risk < 70 ? 'moderate' : 'critical';
-  const rtEl = document.getElementById('riskText');
-  if (rtEl) { rtEl.textContent = riskLevel; rtEl.className = `vital-value risk-text ${riskStatus}`; }
-  const ruEl = document.querySelector('#card-risk .vital-unit');
-  if (ruEl) ruEl.textContent = `${risk}% score`;
   const lmRisk = document.getElementById('lmRisk');
   if (lmRisk) { lmRisk.textContent = riskLevel; lmRisk.style.color = riskStatus === 'safe' ? 'var(--safe)' : riskStatus === 'moderate' ? 'var(--warn)' : 'var(--danger)'; }
   updateStatusBadge('lmRiskStatus', riskStatus, riskLevel);
-  drawRiskGauge(risk, riskStatus);
   drawRiskGaugeMini(risk, riskStatus);
-
-  const riskCard = document.getElementById('card-risk');
-  if (riskCard) riskCard.style.borderColor = riskStatus === 'safe' ? 'rgba(0,232,124,0.4)' : riskStatus === 'moderate' ? 'rgba(255,179,0,0.4)' : 'rgba(255,59,59,0.5)';
 
   // ── Hero mini ──
   setVal('heroHR', hr);
@@ -609,7 +594,6 @@ function updateVitals() {
   setVal('heroSpo2', spo2);
   setVal('heroRisk', riskLevel);
 
-  updateDBPanel(hr, temp, spo2, riskLevel);
   flashUpdate('lm-hr'); flashUpdate('lm-temp'); flashUpdate('lm-spo2'); flashUpdate('lm-risk');
 }
 
@@ -646,35 +630,6 @@ function flashUpdate(id) {
   setTimeout(() => { el.style.boxShadow = ''; }, 400);
 }
 
-function updateCard(cardId, barId, barPct, status, isSafe) {
-  const card = document.getElementById(cardId);
-  if (!card) return;
-  const statusEl = card.querySelector('.vital-status');
-  if (statusEl) { statusEl.className = `vital-status ${status}`; statusEl.textContent = status === 'safe' ? 'Normal' : status === 'moderate' ? 'Moderate' : 'Critical'; }
-  const bar = document.getElementById(barId);
-  if (bar) { bar.style.width = `${barPct}%`; bar.className = `vital-bar${isSafe ? ' safe' : ''}`; }
-}
-
-// ── Risk Gauge (main) ──────────────
-function drawRiskGauge(pct, status) {
-  const canvas = document.getElementById('riskGauge');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  const cx = W / 2, cy = H - 8, r = Math.min(W, H * 1.8) / 2.2;
-  ctx.clearRect(0, 0, W, H);
-  ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, 0); ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 10; ctx.lineCap = 'round'; ctx.stroke();
-  const angle = Math.PI + (pct / 100) * Math.PI;
-  const grad = ctx.createLinearGradient(cx - r, 0, cx + r, 0);
-  grad.addColorStop(0, '#00ffaa'); grad.addColorStop(0.5, '#ffb300'); grad.addColorStop(1, '#ff3b3b');
-  ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, angle);
-  ctx.strokeStyle = grad; ctx.lineWidth = 10; ctx.lineCap = 'round';
-  ctx.shadowColor = status === 'safe' ? '#00ffaa' : status === 'moderate' ? '#ffb300' : '#ff3b3b';
-  ctx.shadowBlur = 12; ctx.stroke(); ctx.shadowBlur = 0;
-  ctx.fillStyle = '#fff'; ctx.font = `bold 18px Orbitron, monospace`; ctx.textAlign = 'center';
-  ctx.fillText(`${pct}%`, cx, cy - 8);
-}
-
 // ── Risk Gauge (mini – Live Data panel) ──
 function drawRiskGaugeMini(pct, status) {
   const canvas = document.getElementById('lmRiskGauge');
@@ -698,38 +653,8 @@ function drawRiskGaugeMini(pct, status) {
 
 window.addEventListener('DOMContentLoaded', () => {
   updateVitals();
-  drawSparkline('hrSparkline', hrHistory, '#00ffaa');
-  drawSparkline('tempSparkline', tempHistory, '#00ffaa');
-  drawSparkline('spo2Sparkline', spo2History, '#00d4ff');
-  drawRiskGauge(20, 'safe');
   drawRiskGaugeMini(20, 'safe');
 });
-
-// ── Database Panel Update ───────────
-let dbRecordCount = 1247;
-
-function updateDBPanel(hr, temp, spo2, riskLevel) {
-  dbRecordCount++;
-  const now = new Date();
-  const pad = n => String(n).padStart(2, '0');
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const dateStr = `${pad(now.getDate())} ${months[now.getMonth()]} ${now.getFullYear()} · ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${now.getHours() >= 12 ? 'PM' : 'AM'}`;
-  const isoStr = now.toISOString().slice(0, 19);
-
-  setVal('dbHR', `${hr} bpm`);
-  setVal('dbTemp', `${temp}°C`);
-  setVal('dbSpo2', `${spo2}%`);
-  setVal('dbRisk', riskLevel);
-  setVal('dbLastTime', dateStr);
-  setVal('dbTimestamp', isoStr);
-  setVal('dbRecordCount', `${dbRecordCount.toLocaleString()} entries`);
-
-  const json = document.getElementById('dbJsonPreview');
-  if (json) json.textContent = `{"hr":${hr},"temp":${temp},"spo2":${spo2},"risk":"${riskLevel}","device":"ESP32-JR-001","ts":"${isoStr}"}`;
-
-  const riskEl = document.getElementById('dbRisk');
-  if (riskEl) riskEl.className = `db-field-value ${riskLevel === 'Normal' ? '' : riskLevel === 'Moderate' ? 'warn' : 'critical'}`;
-}
 
 // ── Emergency Alert Simulation ──────
 let alertTriggered = false;
@@ -748,8 +673,8 @@ function triggerAlert() {
   }
 
   // Send sensor alert to cloud
-  const temp = document.getElementById('tempVal')?.textContent || '39';
-  const spo2 = document.getElementById('spo2Val')?.textContent || '85';
+  const temp = document.getElementById('lmTemp')?.textContent || '39';
+  const spo2 = document.getElementById('lmSpo2')?.textContent || '85';
   fetch(`${API_BASE}/api/sensor?temp=${temp}&oxy=${spo2}`)
     .then(r => r.text())
     .then(data => console.log('Cloud alert response:', data))
@@ -768,7 +693,7 @@ function triggerAlert() {
 
 // ── Scroll-reveal animation ─────────
 const revealEls = document.querySelectorAll(
-  '.feature-card, .flow-step, .vital-card, .side-card, .user-card, .uvp-card, .alert-card, .setup-box, .live-metric-card, .conn-card, .db-status-card, .db-field'
+  '.feature-card, .flow-step, .vital-card, .side-card, .user-card, .uvp-card, .alert-card, .setup-box, .live-metric-card'
 );
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
